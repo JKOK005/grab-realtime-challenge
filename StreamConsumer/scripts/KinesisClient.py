@@ -16,10 +16,6 @@ class KinesisClient(object):
 		name 	= self.config_ref['aws-kinesis']['configuration'][config_str]
 		return name.encode('ascii')
 
-	def __getStreamName(self, stream_name):
-		name 	= self.config_ref['aws-kinesis']['streams'][stream_name]
-		return name.encode('ascii')
-
 	def connect(self):
 		access_key 	= self.__getConfig("access-key")
 		secret_key 	= self.__getConfig("secret-key")

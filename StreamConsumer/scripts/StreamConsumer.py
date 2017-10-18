@@ -12,7 +12,7 @@ class StreamConsumer(object):
 		stream_desc = self.client.describe_stream(StreamName=stream_name)
 		shard_id 	= stream_desc['StreamDescription']['Shards'][0]['ShardId']
 		shard_itr 	= self.client.get_shard_iterator(StreamName=stream_name, 
-													 ShardId="shardId-000000000001", 
+													 ShardId="shardId-000000000000", 
 													 ShardIteratorType="AT_TIMESTAMP",
 													 Timestamp=time_stamp)['ShardIterator']
 

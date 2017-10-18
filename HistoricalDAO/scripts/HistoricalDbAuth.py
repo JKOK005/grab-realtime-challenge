@@ -4,6 +4,7 @@ import xmltodict
 class HistoricalDbAuth(object):
 	config_ref 		= None
 	config_path 	= None
+	conn 			= None
 
 	def __init__(self, config_path):
 		self.config_path 	= config_path
@@ -17,19 +18,27 @@ class HistoricalDbAuth(object):
 		return name.encode('ascii')
 
 	def getDbInstance(self):
+		if(self.conn is not None):
+			return self.conn
+
 		host 		= self.__getConfig("url")
 		port 		= self.__getConfig("port")
 		user_name 	= self.__getConfig("username")
 		password 	= self.__getConfig("password")
 		dbname 		= self.__getConfig("dbname")
 
-		conn 	= psycopg2.connect(	dbname=dbname,
-									user=user_name,
-									password=password,
-									host=host,
-									port=port
-									)
-		return conn.cursor()
+		try:
+			conn 	= psycopg2.connect(	dbname=dbname,
+										user=user_name,
+										password=password,
+										host=host,
+										port=port
+									)	
+		except Exception as ex:
+			print(ex)
+
+		self.conn = conn
+		return self.conn
 
 if __name__ == "__main__":
 	import os

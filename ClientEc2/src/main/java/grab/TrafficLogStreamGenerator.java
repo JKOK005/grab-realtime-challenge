@@ -1,11 +1,15 @@
 package grab;
 
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
 import org.json.JSONObject;
+
+import com.amazonaws.services.kinesis.AmazonKinesis;
+import com.amazonaws.services.kinesis.model.PutRecordRequest;
 
 import interfaces.PayloadInterface;
 
@@ -56,8 +60,20 @@ public class TrafficLogStreamGenerator implements PayloadInterface{
 
 	@Override
 	public void sendStream(ArrayList<String> payload) {
-		JSONObject json = frameJson(required_cols, payload.toArray(new String[payload.size()]));
-		// Send the json payload to Kinesis stream
-		System.out.println(json.toString());
+		System.out.println("Sending to traffic log stream");
+		try {
+			AmazonKinesis kinesis_client = new KinesisClient().authenticate();
+			JSONObject json = frameJson(required_cols, payload.toArray(new String[payload.size()]));
+
+			// Send the json payload to Kinesis stream
+			byte[] payload_byte = json.toString().getBytes("utf-8");
+			PutRecordRequest putRecord = new PutRecordRequest();
+			putRecord.setStreamName("grab-traffic-log-stream");
+			putRecord.setPartitionKey("trafficlog");
+			putRecord.setData(ByteBuffer.wrap(payload_byte));
+			kinesis_client.putRecord(putRecord);
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }

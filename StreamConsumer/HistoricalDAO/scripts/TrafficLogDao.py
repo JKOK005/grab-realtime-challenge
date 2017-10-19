@@ -11,21 +11,18 @@ class TrafficLogDao(object):
 
 	def create(self, dict):
 		timestamp 	= dict['timestamp']
-		distance 	= dict['distance']
-		travel_time = dict['traveltime']
+		avgspeed 	= dict['avgspeed']
 		locationid 	= dict['locationid']
 
 		conn 	= self.db_auth.getDbInstance()
 		cursor 	= conn.cursor()
 		try:
-			command = """ INSERT INTO {0}."{1}" (timestamp, distance, traveltime, locationid) 
-						VALUES ('{2}',{3},{4},{5}) """.format(self.schema, 
-															  self.table_name,
-															  timestamp,
-															  distance,
-															  travel_time,
-															  locationid).encode('utf-8')
-			print(command)
+			command = """ INSERT INTO {0}.{1} (timestamp, locationid, avgspeed) 
+						VALUES ('{2}',{3},{4}) """.format(self.schema, 
+														  self.table_name,
+														  timestamp,
+														  locationid,
+														  avgspeed).encode('utf-8')
 			cursor.execute(command)
 			conn.commit()
 

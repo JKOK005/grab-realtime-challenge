@@ -2,6 +2,7 @@ from KinesisClient import KinesisClient
 from datetime import datetime, timedelta
 from dateutil.tz import tzoffset
 from StreamConsumer import StreamConsumer
+import json
 
 class TrafficLogStreamConsumer(StreamConsumer):
 	client 	= None
@@ -11,18 +12,33 @@ class TrafficLogStreamConsumer(StreamConsumer):
 		self.client = KinesisClient(config_path).connect()
 		return
 
-	def consume(self, stream_name, from_time_stamp):
-		ss_count 	= 0
-		response 	= self.consumeFirstInstance(stream_name, from_time_stamp)
-		result 		= response['Records']
+	def __getAvgSpeed(self, results):
+		avg_speed 	= 0
+		counter 	= 0
 
-		# Add traffic logs processing logic here
-		while("NextShardIterator" in response and result):
-			ss_count 		+= len(result)
+		for each_result in results:
+			Data 			= json.loads(each_result['Data'])
+			travel_time 	= Data['data']['travelTime']
+			distance 		= float((Data['data']['distance']))
+
+			if(travel_time > 0 and distance > 0):
+				tmp_speed 	= distance / travel_time
+				avg_speed 	= (avg_speed*counter + tmp_speed) / (counter +1)
+				counter 	+= 1
+		return avg_speed
+
+	def consume(self, stream_name, from_time_stamp):
+		avg_speed 	= None
+		response 	= self.consumeFirstInstance(stream_name, from_time_stamp)
+		results		= response['Records']
+
+		# Add demand processing logic here
+		while("NextShardIterator" in response and results):
+			avg_speed  		= self.__getAvgSpeed(results)
 			next_shard_itr 	= response['NextShardIterator']
 			response 		= self.client.get_records(ShardIterator=next_shard_itr)
-			result 			= response['Records']
-		return ss_count
+			results 		= response['Records']
+		return avg_speed
 
 if __name__ == "__main__":
 	import os

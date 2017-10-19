@@ -15,7 +15,7 @@ class DemandStreamConsumer(StreamConsumer):
 		dd_count 	= 0
 		response 	= self.consumeFirstInstance(stream_name, from_time_stamp)
 		result 		= response['Records']
-
+		
 		# Add demand processing logic here
 		while("NextShardIterator" in response and result):
 			dd_count 		+= len(result)

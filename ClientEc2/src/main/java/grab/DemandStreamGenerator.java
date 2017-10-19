@@ -43,6 +43,7 @@ public class DemandStreamGenerator implements PayloadInterface{
 
 	@Override
 	public void sendStream(ArrayList<String> payload) {
+		System.out.println("Sending to demand stream");
 		try {
 			AmazonKinesis kinesis_client = new KinesisClient().authenticate();
 			JSONObject json = frameJson(required_cols, payload.toArray(new String[payload.size()]));
@@ -50,7 +51,7 @@ public class DemandStreamGenerator implements PayloadInterface{
 			// Send the json payload to Kinesis stream
 			byte[] payload_byte = json.toString().getBytes("utf-8");
 			PutRecordRequest putRecord = new PutRecordRequest();
-			putRecord.setStreamName("grab-supply-stream");
+			putRecord.setStreamName("grab-demand-stream");
 			putRecord.setPartitionKey("demand");
 			putRecord.setData(ByteBuffer.wrap(payload_byte));
 			kinesis_client.putRecord(putRecord);

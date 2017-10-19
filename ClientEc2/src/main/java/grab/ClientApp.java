@@ -20,11 +20,11 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.S3Object;
 
 public class ClientApp {
-	private static String access_key;
-	private static String secret_key;
-	private static String bucket_name;
-	private static String bucket_path;
-	private static String region;
+	private String access_key;
+	private String secret_key;
+	private String bucket_name;
+	private String bucket_path;
+	private String region;
 	
 	public ClientApp() throws Exception{
 		Document doc;
@@ -47,7 +47,7 @@ public class ClientApp {
 		region	 	= doc.getElementsByTagName("region").item(0).getTextContent();
 	}
 	
-	public AmazonS3 authenticate(String access_key, String secret_key) {
+	public AmazonS3 authenticate() {
 		AmazonS3 s3_client 	= null;
 		try {
 			BasicAWSCredentials cred = new BasicAWSCredentials(access_key, secret_key);		
@@ -65,13 +65,21 @@ public class ClientApp {
 		return s3_client;
 	}
 	
+	public String getBucketName() {
+		return bucket_name;
+	}
+	
+	public String getBucketPath() {
+		return bucket_path;
+	}
+	
 	public static void main(String[] args) throws Exception {
         String [] nextLine;
 
 		ClientApp client 	= new ClientApp();
-		AmazonS3 s3_client 	= client.authenticate(access_key, secret_key);
+		AmazonS3 s3_client 	= client.authenticate();
 		
-		S3Object s3_obj 	= s3_client.getObject(bucket_name, bucket_path);
+		S3Object s3_obj 	= s3_client.getObject(client.getBucketName(), client.getBucketPath());
 		InputStream in_strm = s3_obj.getObjectContent();
         InputStreamReader in_strm_rdr = new InputStreamReader(in_strm);
         CSVReader csv 		= new CSVReader(in_strm_rdr, ',');

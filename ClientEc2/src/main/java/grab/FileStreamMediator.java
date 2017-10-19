@@ -26,8 +26,7 @@ public class FileStreamMediator {
 			for(String each_header : required_cols) {
 				String tmp 			= str[getHeaderLocation(headers, each_header)];
 				required_data.add(tmp);
-			}
-			
+			}	
 			payload.sendStream(required_data);
 		}
 	}

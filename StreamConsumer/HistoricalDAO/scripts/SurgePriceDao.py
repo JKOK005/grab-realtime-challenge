@@ -18,7 +18,7 @@ class SurgePriceDao(object):
 		conn 	= self.db_auth.getDbInstance()
 		cursor 	= conn.cursor()
 		try:
-			command = """ INSERT INTO {0}."{1}" (timestamp, demand, supply, locationid) 
+			command = """ INSERT INTO {0}.{1} (timestamp, demand, supply, locationid) 
 						VALUES ('{2}',{3},{4},{5}) """.format(self.schema, 
 															  self.table_name,
 															  timestamp,
@@ -33,7 +33,6 @@ class SurgePriceDao(object):
 			print(ex)
 
 		cursor.close()
-		conn.close()
 		return
 
 	def read(self):

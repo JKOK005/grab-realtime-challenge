@@ -14,7 +14,7 @@ class SurgePriceNode(object):
 		self.ss_consumer 	= SupplyStreamConsumer(kinesis_config)
 		self.sp_dao 		= SurgePriceDao(db_config)
 
-	def getRealtimeData(self):
+	def __consumeStream(self):
 		result 					= {}
 		time_now 				= datetime.now()
 
@@ -27,10 +27,17 @@ class SurgePriceNode(object):
 												time_now.replace(tzinfo=tzoffset("Offset", timedelta(hours=8))))
 		return result
 
+	def getRealtimeDate(self):
+		res 	= self.__consumeStream()
+		print(res)
+		self.sp_dao.create(res)
+		return 
+
 if __name__ == "__main__":
 	import os
 	kinesis_config 	= os.path.join(os.getcwd(),'Kinesis','config','config.xml')
 	db_config 		= os.path.join(os.getcwd(),'HistoricalDAO','config','config.xml')
 	sp 		= SurgePriceNode(kinesis_config, db_config)
-	res 	= sp.getRealtimeData()
-	print(res)
+	sp.getRealtimeDate()
+	sp.getRealtimeDate()
+	sp.getRealtimeDate()

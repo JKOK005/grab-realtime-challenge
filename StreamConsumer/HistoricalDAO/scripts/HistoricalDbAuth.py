@@ -40,6 +40,12 @@ class HistoricalDbAuth(object):
 		self.conn = conn
 		return self.conn
 
+	def __del__(self):
+		try:
+			self.conn.close()
+		except Exception as ex:
+			pass
+
 if __name__ == "__main__":
 	import os
 	config_path 	= os.path.join('..','config','config.xml')

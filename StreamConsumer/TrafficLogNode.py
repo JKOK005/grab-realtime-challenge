@@ -19,7 +19,7 @@ class TrafficLogNode(object):
 
 		result["timestamp"] 	= time_now
 		result["avgspeed"] 		= resp
-		result["locationid"] 	= 1000
+		result["locationid"] 	= 237
 		return result
 
 	def getRealtimeData(self, delay):
@@ -31,9 +31,12 @@ class TrafficLogNode(object):
 
 if __name__ == "__main__":
 	import os
-	delay 			= 10 	#Minutes
+	import time
 
-	kinesis_config 	= os.path.join(os.getcwd(),'Kinesis','config','config.xml')
-	db_config 		= os.path.join(os.getcwd(),'HistoricalDAO','config','config.xml')
-	tl 				= TrafficLogNode(kinesis_config, db_config)
-	tl.getRealtimeData(delay)
+	while(True):
+		delay 			= 10 	#Minutes
+		kinesis_config 	= os.path.join(os.getcwd(),'Kinesis','config','config.xml')
+		db_config 		= os.path.join(os.getcwd(),'HistoricalDAO','config','config.xml')
+		tl 				= TrafficLogNode(kinesis_config, db_config)
+		tl.getRealtimeData(delay)
+		time.sleep(10)

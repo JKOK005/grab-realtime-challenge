@@ -37,6 +37,7 @@ public class DelayAgent {
 		}
 		last_date 	= new_time;
 		try {
+			System.out.println(diff);
 			Thread.sleep(diff);
 		}catch(Exception ex) {
 			System.out.println(ex);

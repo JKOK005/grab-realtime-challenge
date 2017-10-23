@@ -19,7 +19,7 @@ class SurgePriceNode(object):
 		time_now 				= datetime.now()
 
 		result["timestamp"] 	= time_now
-		result["locationid"] 	= 1000
+		result["locationid"] 	= 237
 		result["demand"] 		= self.dd_consumer.consume("grab-demand-stream", 
 												time_now.replace(tzinfo=tzoffset("Offset", timedelta(hours=8, minutes=delay))))
 
@@ -36,9 +36,12 @@ class SurgePriceNode(object):
 
 if __name__ == "__main__":
 	import os
-	delay 			= 10 	#Minutes
-
-	kinesis_config 	= os.path.join(os.getcwd(),'Kinesis','config','config.xml')
-	db_config 		= os.path.join(os.getcwd(),'HistoricalDAO','config','config.xml')
-	sp 				= SurgePriceNode(kinesis_config, db_config)
-	sp.getRealtimeData(delay)
+	import time
+	
+	while(True):
+		delay 			= 10 	#Minutes
+		kinesis_config 	= os.path.join(os.getcwd(),'Kinesis','config','config.xml')
+		db_config 		= os.path.join(os.getcwd(),'HistoricalDAO','config','config.xml')
+		sp 				= SurgePriceNode(kinesis_config, db_config)
+		sp.getRealtimeData(delay)
+		time.sleep(delay)

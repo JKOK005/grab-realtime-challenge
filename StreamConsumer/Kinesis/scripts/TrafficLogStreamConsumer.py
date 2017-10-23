@@ -25,7 +25,7 @@ class TrafficLogStreamConsumer(StreamConsumer):
 				tmp_speed 	= distance / travel_time
 				avg_speed 	= (avg_speed*counter + tmp_speed) / (counter +1)
 				counter 	+= 1
-		return avg_speed
+		return avg_speed * 3600 	# Conversion to km/h
 
 	def consume(self, stream_name, from_time_stamp):
 		avg_speed 	= None

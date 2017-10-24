@@ -34,9 +34,8 @@
 	</nav>
 	
 	<div class="col-sm-9 col-lg-10 col-lg-offset-1 main">
-
 		<div class="row">
-			<div class="col-md-6 col-lg-offset-3">
+			<div class="col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						Real time estimate
@@ -63,7 +62,20 @@
 					</div>
 					<div class="panel-body">
 						<div class="canvas-wrapper">
-							<canvas class="chart" id="pie-chart" ></canvas>
+							<div>
+					 		 	<h4>Please Choose a district</h4>
+							</div>
+
+							<form>
+								<fieldset>
+								    <label>Cities</label>
+								    <select id="myCity" name="myCity" onchange="changeMap(this.value)">
+										<option value="None">Select a City</option>
+										<option value="upp-es">Upper east side - Manhattan</option>
+								    </select>
+								</fieldset>
+							</form>
+							<div id="map" style="height:300px;"></div>
 						</div>
 					</div>
 				</div>
@@ -71,7 +83,7 @@
 		</div>
 
 		<div class="row">
-			<div class="col-lg-12">
+			<div class="col-lg-10">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						Demand and supply
@@ -86,7 +98,7 @@
 		</div><!--/.row-->
 		
 		<div class="row">
-			<div class="col-lg-12">
+			<div class="col-lg-10">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						Traffic congestion
@@ -110,7 +122,28 @@
 	<script src="{% static 'Webpage/js/easypiechart-data.js' %}"></script>
 	<script src="{% static 'Webpage/js/bootstrap-datepicker.js' %}"></script>
 	<script src="{% static 'Webpage/js/custom.js' %}"></script>
+	<script src="{% static 'Webpage/js/maps.api.js' %}" ></script>
 	<script>
+
+	var map;
+
+	function changeMap(city) {
+	  var c = coords[city].split(',');
+	  map.setCenter(new google.maps.LatLng(c[0], c[1]));
+	}
+
+	var coords = {
+		'upp-es': '40.7736,-73.9566',
+	};
+
+	function myMap() {
+		var mapCanvas = document.getElementById("map");
+		var mapOptions = {  
+			center: new google.maps.LatLng(40.685646, -76.195499), 
+			zoom: 15 
+		};
+		map = new google.maps.Map(mapCanvas, mapOptions);
+	}
 
 	window.onload = function () {
 		var chart1 = document.getElementById("line-chart").getContext("2d");
@@ -121,6 +154,7 @@
 			scaleGridLineColor: "rgba(0,0,0,.05)",
 			scaleFontColor: "#c5c7cc"
 		});
+		
 		var chart2 = document.getElementById("bar-chart").getContext("2d");
 		window.myBar = new Chart(chart2).Line(barChartData, {
 			responsive: true,
@@ -128,6 +162,9 @@
 			scaleGridLineColor: "rgba(0,0,0,.05)",
 			scaleFontColor: "#c5c7cc"
 		});
+
+		// Plot the map using Google API
+		myMap();
 	};
 	</script>	
 </body>

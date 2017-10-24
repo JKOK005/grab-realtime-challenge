@@ -76,9 +76,17 @@ WSGI_APPLICATION = 'Viewer.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME'  : 'grab',
+        'USER'  : '',
+        'PASSWORD' : '',
+        'HOST'  : '',
+        'PORT'  : '',
+    },
+    'local': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    },
 }
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')

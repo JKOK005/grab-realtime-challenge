@@ -76,12 +76,12 @@ WSGI_APPLICATION = 'Viewer.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME'  : 'grab',
-        'USER'  : '',
-        'PASSWORD' : '',
-        'HOST'  : '',
-        'PORT'  : '',
+        'ENGINE'    : 'django.db.backends.postgresql_psycopg2',
+        'NAME'      : os.environ.get('grab_dbname'),
+        'USER'      : os.environ.get('grab_user'),
+        'PASSWORD'  : os.environ.get('grab_password'),
+        'HOST'      : os.environ.get('grab_host'),
+        'PORT'      : os.environ.get('grab_port'),
     },
     'local': {
         'ENGINE': 'django.db.backends.sqlite3',

@@ -30,7 +30,8 @@ public class ClientApp {
 		Document doc;
 		
 		try {
-			InputStream config_xml = ClassLoader.getSystemResourceAsStream("config.xml");
+			ClassLoader class_loader = Thread.currentThread().getContextClassLoader();
+			InputStream config_xml = class_loader.getResourceAsStream("config.xml");
 			
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
 	                .newInstance();
@@ -75,7 +76,8 @@ public class ClientApp {
 	
 	public static void main(String[] args) throws Exception {
         String [] nextLine;
-
+        int skip 		= 8009;
+        int count		= 0;
 		ClientApp client 	= new ClientApp();
 		AmazonS3 s3_client 	= client.authenticate();
 		
@@ -88,7 +90,18 @@ public class ClientApp {
         csv.readNext(); // Discard empty row
         
         while ((nextLine = csv.readNext()) != null) {
-        	fs.sendPayload(nextLine);
+        	try {
+        		if(count > skip) {
+        			fs.sendPayload(nextLine);
+        			skip++;
+        		}
+        	}catch(Exception ex) {
+        		csv = new CSVReader(in_strm_rdr, ',');
+        		csv.readNext();
+        		count = 0;
+        		ex.printStackTrace();
+        	}
+        	count++;
          }
         
         csv.close();

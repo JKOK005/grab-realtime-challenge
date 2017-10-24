@@ -27,4 +27,13 @@
     	<version>20160810</version>
 	</dependency>
   </dependencies>
+  
+  <build>
+  	<resources>
+  		<directory>src/main/resources</directory>
+  		<includes>
+  			<include>config.xml</include>
+  		</includes>
+  	</resources>
+  </build>
 </project>

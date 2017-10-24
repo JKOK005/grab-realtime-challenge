@@ -1,3 +1,4 @@
 /.metadata/
 resources/
 **/[Cc]onfig*
+*.pyc

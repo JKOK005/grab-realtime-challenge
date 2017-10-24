@@ -78,10 +78,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME'  : 'grab',
-        'USER'  : 'johan',
-        'PASSWORD' : '9512368740gRab',
-        'HOST'  : 'grab-surgepricecalculator.clba6ox1pgke.ap-northeast-1.rds.amazonaws.com',
-        'PORT'  : '4000',
+        'USER'  : '',
+        'PASSWORD' : '',
+        'HOST'  : '',
+        'PORT'  : '',
     },
     'local': {
         'ENGINE': 'django.db.backends.sqlite3',

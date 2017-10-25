@@ -1,7 +1,6 @@
 import os
 import requests
 import json
-import urllib
 
 class WeatherUndergroundMixin(object):
 	__url_template 	= "http://api.wunderground.com/api/{0}/history_{1}/q/{2}/{3}.json"
@@ -31,8 +30,8 @@ class WeatherUndergroundMixin(object):
 	def call(self):
 		resp 	= requests.get(self.getUrl())
 		if(resp.status_code == 200):
-			parsed_body = urllib.unquote(resp.content)
-			return json.loads(parsed_body)
+			decode_str = resp.content.decode('utf-8')
+			return json.loads(decode_str)
 		return None
 
 	def getContent(self, resp):

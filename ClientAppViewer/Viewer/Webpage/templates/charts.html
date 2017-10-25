@@ -121,13 +121,13 @@
 					<div class="panel-heading">
 						Weather
 						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span>
-						<span class="pull-right panel-toggle panel-button-tab-left" onclick="refreshWeather()"><em class="fa fa-refresh"></em></span>
+						<span class="pull-right panel-toggle panel-button-tab-left" onclick="getWeatherRange()"><em class="fa fa-refresh"></em></span>
 					</div>
 
 					<div class="panel-body">
-						<div>
+						<div id="weatherRange">
 							<form>
-								Date &nbsp: 	<input type="text" name="start-date" placeholder="YYYY-MM-DD" size="15"> 
+								Date &nbsp: 	<input type="text" name="start-date" placeholder="YYYYMMDD" size="15"> 
 												<br><br>
 							</form>
 						</div>
@@ -236,7 +236,7 @@
 					demandAndSupplyData['datasets'][1]['data'] 	= resp.supply;
 					demandAndSupplyData['labels'] 				= resp.timestamp;
 					console.log(demandAndSupplyData);
-					display("demandsupply-chart", demandAndSupplyData)
+					display("demandsupply-chart", demandAndSupplyData);
 				},
 				error 		: function(result, status, xhr){
 					console.log(result);
@@ -266,7 +266,7 @@
 					trafficData['datasets'][0]['data'] 	= resp.avgspeed;
 					trafficData['labels'] 				= resp.timestamp;
 					console.log(trafficData);
-					display("traffic-chart", trafficData)
+					display("traffic-chart", trafficData);
 				},
 				error 		: function(result, status, xhr){
 					console.log(result);
@@ -274,8 +274,31 @@
 			})
 		}
 
-		function refreshWeather(){
+		function getWeatherRange(){
+			var inputs 		= $("#weatherRange").find("input");
+			var startDate 	= $.grep(inputs, function(e){return e.name == "start-date";})[0];
+			var startQuery 	= startDate.value
 
+			$.ajax({
+				url			: "get-weather/range",
+				type		: "POST",
+				data 		: {	date 	: startQuery,
+								csrfmiddlewaretoken: '{{ csrf_token }}',
+								},
+				datatype 	: "json",
+				success 	: function(result, status, xhr){
+					var resp 	= result.results;
+					weatherData['datasets'][0]['data'] 	= resp.windspeed;
+					weatherData['datasets'][1]['data'] 	= resp.temp;
+					weatherData['datasets'][2]['data'] 	= resp.humidity;
+					weatherData['labels'] 				= resp.timestamp;
+					console.log(trafficData);
+					display("weather-chart", weatherData);
+				},
+				error 		: function(result, status, xhr){
+					console.log(result);
+				},
+			})
 		}
 
 		function display(chartId, chartDataObj){

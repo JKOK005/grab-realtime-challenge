@@ -6,9 +6,9 @@ class WeatherDistribution(WeatherUndergroundMixin, View):
 	def __init__(self, *args, **kwargs):
 		super(WeatherDistribution, self).__init__(*args, **kwargs)
 
-	def get(self, request, *args, **kwargs):
-		# date 		= request.GET['date']
-		resp 		= self.setUrlState("ny").setUrlDistrict("upper_east_side").setUrlQueryDate(20171012).call()
+	def post(self, request, *args, **kwargs):
+		date 		= request.POST['date']
+		resp 		= self.setUrlState("ny").setUrlDistrict("upper_east_side").setUrlQueryDate(date).call()
 		contents 	= self.getContent(resp)
 		resp_dict 	= self.getResponseDict(contents)
-		return JsonResponse({"results" : resp_dict})
+		return JsonResponse({"results" : resp_dict})	

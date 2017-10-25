@@ -40,7 +40,7 @@
 					<div class="panel-heading">
 						Real time estimate	
 						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span>
-						<span class="pull-right panel-toggle panel-button-tab-left" onclick=""><em class="fa fa-refresh"></em></span>
+						<span class="pull-right panel-toggle panel-button-tab-left" onclick="refreshLatest()"><em class="fa fa-refresh"></em></span>
 					</div>
 					<div class="panel-body">
 						<div class="canvas-wrapper">
@@ -73,7 +73,7 @@
 					<div class="panel-heading">
 						Vehicles
 						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span>
-						<span class="pull-right panel-toggle panel-button-tab-left" onclick=""><em class="fa fa-refresh"></em></span>
+						<span class="pull-right panel-toggle panel-button-tab-left" onclick="refreshTimeRange()"><em class="fa fa-refresh"></em></span>
 					</div>
 					<div class="panel-body">
 						<div>
@@ -101,7 +101,7 @@
 					<div class="panel-heading">
 						Avg speed
 						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span>
-						<span class="pull-right panel-toggle panel-button-tab-left" onclick=""><em class="fa fa-refresh"></em></span>
+						<span class="pull-right panel-toggle panel-button-tab-left" onclick="refreshTimeRange()"><em class="fa fa-refresh"></em></span>
 					</div>
 
 					<div class="panel-body">
@@ -128,7 +128,7 @@
 					<div class="panel-heading">
 						Weather
 						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span>
-						<span class="pull-right panel-toggle panel-button-tab-left" onclick=""><em class="fa fa-refresh"></em></span>
+						<span class="pull-right panel-toggle panel-button-tab-left" onclick="refreshWeather()"><em class="fa fa-refresh"></em></span>
 					</div>
 
 					<div class="panel-body">
@@ -161,48 +161,63 @@
 	<script src="{% static 'Webpage/js/custom.js' %}"></script>
 	<script src="{% static 'Webpage/js/maps.api.js' %}" ></script>
 	<script>
+		var map;
+		var current_area;
 
-	var map;
-
-	function changeMap(city) {
-	  var c = coords[city].split(',');
-	  map.setCenter(new google.maps.LatLng(c[0], c[1]));
-	}
-
-	var coords = {
-		'upp-es': '40.7736,-73.9566',
-	};
-
-	function myMap() {
-		var mapCanvas = document.getElementById("map");
-		var mapOptions = {  
-			center: new google.maps.LatLng(40.685646, -76.195499), 
-			zoom: 15 
+		var coords = {
+			'upp-es': {	'loc' 	: '40.7736,-73.9566',
+						'id' 	: 237,
+					}
 		};
-		map = new google.maps.Map(mapCanvas, mapOptions);
-	}
 
-	window.onload = function () {
-		var chart1 = document.getElementById("line-chart").getContext("2d");
-		// console.log(demandAndSupplyData['labels'].push('asdasd'));
-		window.myLine = new Chart(chart1).Line(demandAndSupplyData, {
-			responsive: true,
-			scaleLineColor: "rgba(0,0,0,.2)",
-			scaleGridLineColor: "rgba(0,0,0,.05)",
-			scaleFontColor: "#c5c7cc"
-		});
-		
-		var chart2 = document.getElementById("bar-chart").getContext("2d");
-		window.myBar = new Chart(chart2).Line(barChartData, {
-			responsive: true,
-			scaleLineColor: "rgba(0,0,0,.2)",
-			scaleGridLineColor: "rgba(0,0,0,.05)",
-			scaleFontColor: "#c5c7cc"
-		});
+		function changeMap(city) {
+		  var c = coords[city]['loc'].split(',');
+		  map.setCenter(new google.maps.LatLng(c[0], c[1]));
+		  current_area 	= city;
+		}
 
-		// Plot the map using Google API
-		myMap();
-	};
+		function myMap() {
+			var mapCanvas = document.getElementById("map");
+			var mapOptions = {  
+				center: new google.maps.LatLng(40.685646, -76.195499), 
+				zoom: 15 
+			};
+			map = new google.maps.Map(mapCanvas, mapOptions);
+		}
+
+		function refreshLatest(){
+			console.log(current_area);
+		}
+
+		function refreshTimeRange(){
+
+		}
+
+		function refreshWeather(){
+
+		}
+
+		window.onload = function () {
+			var chart1 = document.getElementById("line-chart").getContext("2d");
+			// console.log(demandAndSupplyData['labels'].push('asdasd'));
+			window.myLine = new Chart(chart1).Line(demandAndSupplyData, {
+				responsive: true,
+				scaleLineColor: "rgba(0,0,0,.2)",
+				scaleGridLineColor: "rgba(0,0,0,.05)",
+				scaleFontColor: "#c5c7cc"
+			});
+			
+			var chart2 = document.getElementById("bar-chart").getContext("2d");
+			window.myBar = new Chart(chart2).Line(barChartData, {
+				responsive: true,
+				scaleLineColor: "rgba(0,0,0,.2)",
+				scaleGridLineColor: "rgba(0,0,0,.05)",
+				scaleFontColor: "#c5c7cc"
+			});
+
+			// Plot the map using Google API
+			myMap();
+		};
 	</script>	
 </body>
 </html>

@@ -14,7 +14,7 @@ class SurgePriceCalculator(SurgePriceCalculatorMixin, View):
 	def __init__(self, *args, **kwargs):
 		super(SurgePriceCalculator, self).__init__(*args, **kwargs)
 
-	def get(self, request, *args, **kwargs):
+	def post(self, request, *args, **kwargs):
 		data_dao 	= RealtimeDataDAOFactory.getDAO("surgeprice")
 		model_obj 	= data_dao.getLatestData()
 		sp 			= self.getSurgePrice(model_obj)
@@ -24,7 +24,7 @@ class SurgePriceCalculator(SurgePriceCalculatorMixin, View):
 		return JsonResponse({"results" : resp_dict})
 
 class TrafficStatus(View):
-	def get(self, request, *args, **kwargs):
+	def post(self, request, *args, **kwargs):
 		data_dao 	= RealtimeDataDAOFactory.getDAO("traffic")
 		model_obj 	= data_dao.getLatestData()
 		avg_speed 	= model_obj.avgspeed
@@ -34,13 +34,13 @@ class TrafficStatus(View):
 		return JsonResponse({"results" : resp_dict})
 
 class DemandSupplyDistribution(View):
-	def get(self, request, *args, **kwargs):
+	def post(self, request, *args, **kwargs):
 		resp_dict 	= { 'demand' 	: [],
 						'supply' 	: [],
 						'timestamp' : [],}
 		try:
-			start 		= parser.parse(request.GET['start'])
-			end 		= parser.parse(request.GET['end'])
+			start 		= parser.parse(request.POST['start'])
+			end 		= parser.parse(request.POST['end'])
 			data_dao 	= RealtimeDataDAOFactory.getDAO("surgeprice")
 			model_obj 	= data_dao.getTimestampRange(start, end)
 
@@ -53,12 +53,12 @@ class DemandSupplyDistribution(View):
 		return JsonResponse({"results" : resp_dict})
 
 class TrafficDistribution(View):
-	def get(self, request, *args, **kwargs):
+	def post(self, request, *args, **kwargs):
 		resp_dict 	= { 'avgspeed' 	: [],
 						'timestamp' : [],}
 		try:
-			start 		= parser.parse(request.GET['start'])
-			end 		= parser.parse(request.GET['end'])
+			start 		= parser.parse(request.POST['start'])
+			end 		= parser.parse(request.POST['end'])
 			data_dao 	= RealtimeDataDAOFactory.getDAO("traffic")
 			model_obj 	= data_dao.getTimestampRange(start, end)
 
@@ -67,4 +67,5 @@ class TrafficDistribution(View):
 				resp_dict['timestamp'].append(each_model.timestamp)
 		except Exception as ex:
 			pass
+
 		return JsonResponse({"results" : resp_dict})

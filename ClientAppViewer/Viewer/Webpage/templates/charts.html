@@ -104,10 +104,10 @@
 					<div class="panel-body">
 						<div id="trafficRange">
 							<form>
-								Start &nbsp: 	<input type="text" name="start-time" placeholder="YYYY-MM-DD" size="15"> 
+								Start &nbsp: 	<input type="text" name="start-date" placeholder="YYYY-MM-DD" size="15"> 
 												<input type="text" name="start-time" placeholder="HH:MM:ss" size="15">
 												<br><br>
-								End &nbsp&nbsp: <input type="text" name="end-time" placeholder="YYYY-MM-DD" size="15"> 
+								End &nbsp&nbsp: <input type="text" name="end-date" placeholder="YYYY-MM-DD" size="15"> 
 												<input type="text" name="end-time" placeholder="HH:MM:ss" size="15">
 												<br><br>
 							</form>
@@ -185,7 +185,8 @@
 		function getSurgePriceLatest(){
 			$.ajax({
 				url			: "get-surgeprice/latest",
-				type		: "GET",
+				type		: "POST",
+				data 		: {csrfmiddlewaretoken: '{{ csrf_token }}'},
 				datatype 	: "json",
 				success 	: function(result, status, xhr){
 					var cur_sp 	= result.results.surgeprice.toFixed(2);
@@ -200,7 +201,8 @@
 		function getTrafficLatest(){
 			$.ajax({
 				url			: "get-traffic/latest",
-				type		: "GET",
+				type		: "POST",
+				data 		: {csrfmiddlewaretoken: '{{ csrf_token }}'},
 				datatype 	: "json",
 				success 	: function(result, status, xhr){
 					var cur_sp 	= result.results.avgspeed.toFixed(2);
@@ -228,9 +230,10 @@
 
 			$.ajax({
 				url			: "get-demandsupply/range",
-				type		: "GET",
+				type		: "POST",
 				data 		: {	start 	: startQuery,
 								end 	: endQuery,
+								csrfmiddlewaretoken: '{{ csrf_token }}',
 								},
 				datatype 	: "json",
 				success 	: function(result, status, xhr){
@@ -248,7 +251,7 @@
 		}
 
 		function getTrafficRange(){
-			var inputs 		= $("#demandSupplyRange").find("input");
+			var inputs 		= $("#trafficRange").find("input");
 			var startDate 	= $.grep(inputs, function(e){return e.name == "start-date";})[0];
 			var startTime 	= $.grep(inputs, function(e){return e.name == "start-time";})[0];
 			var endDate 	= $.grep(inputs, function(e){return e.name == "end-date";})[0];
@@ -258,9 +261,10 @@
 
 			$.ajax({
 				url			: "get-traffic/range",
-				type		: "GET",
+				type		: "POST",
 				data 		: {	start 	: startQuery,
 								end 	: endQuery,
+								csrfmiddlewaretoken: '{{ csrf_token }}',
 								},
 				datatype 	: "json",
 				success 	: function(result, status, xhr){

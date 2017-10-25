@@ -15,6 +15,9 @@ class Geohash(models.Model):
     city = models.TextField(blank=True, null=True)  # This field type is a guess.
     state = models.TextField(blank=True, null=True)  # This field type is a guess.
 
+    def __str__(self):
+        return "{0}, {1}, {2}".format(self.district, self.city, self.state)
+
     class Meta:
         managed = False
         db_table = 'geohash'
@@ -25,6 +28,9 @@ class Surgeprice(models.Model):
     supply = models.IntegerField()
     locationid = models.ForeignKey(Geohash, models.DO_NOTHING, db_column='locationid')
 
+    def __str__(self):
+        return "Surge price - {0}".format(self.timestamp)
+
     class Meta:
         managed = False
         db_table = 'surgeprice'
@@ -33,6 +39,9 @@ class Trafficlog(models.Model):
     timestamp = models.DateTimeField()
     locationid = models.ForeignKey(Geohash, models.DO_NOTHING, db_column='locationid')
     avgspeed = models.FloatField()
+
+    def __str__(self):
+        return "Traffic log - {0}".format(self.timestamp)
 
     class Meta:
         managed = False

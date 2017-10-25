@@ -45,12 +45,11 @@
 					<div class="panel-body">
 						<div class="canvas-wrapper">
 							<div>
-					 		 	<h4>Please Choose a district</h4>
+					 		 	<h4>Please Choose a location</h4>
 							</div>
 
 							<form>
 								<fieldset>
-								    <label>Cities</label>
 								    <select id="myCity" name="myCity" onchange="changeMap(this.value)">
 										<option value="None">Select a City</option>
 										<option value="upp-es">Upper east side - Manhattan</option>
@@ -59,8 +58,8 @@
 							</form>
 
 							<div>
-								<h4>Surge Price : </h4>
-								<h4>Average speed : </h4>
+								<h4>Surge Price ($) : <span id="surgePriceDisp" style="color:rgb(0,0,255);"></span></h4>
+								<h4 id="avgSpeedDisp">Average speed (miles/h) : <span id="trafficDisp" style="color:rgb(0,0,255)"></span></h4>
 							</div>
 							<div id="map" style="height:350px;"></div>
 						</div>
@@ -78,10 +77,10 @@
 					<div class="panel-body">
 						<div>
 							<form>
-								Start &nbsp: 	<input type="text" name="start-time" placeholder="YYY-MM-DD" size="15"> 
+								Start &nbsp: 	<input type="text" name="start-time" placeholder="YYYY-MM-DD" size="15"> 
 												<input type="text" name="start-time" placeholder="HH:MM:ss" size="15">
 												<br><br>
-								End &nbsp&nbsp: <input type="text" name="end-time" placeholder="YYY-MM-DD" size="15"> 
+								End &nbsp&nbsp: <input type="text" name="end-time" placeholder="YYYY-MM-DD" size="15"> 
 												<input type="text" name="end-time" placeholder="HH:MM:ss" size="15">
 												<br><br>
 							</form>
@@ -185,8 +184,39 @@
 			map = new google.maps.Map(mapCanvas, mapOptions);
 		}
 
+		function getSurgePriceLatest(){
+			$.ajax({
+				url			: "get-surgeprice/latest",
+				type		: "GET",
+				datatype 	: "json",
+				success 	: function(result, status, xhr){
+					var cur_sp 	= result.results.surgeprice.toFixed(2);
+					$("#surgePriceDisp").text(cur_sp);
+				},
+				error 		: function(result, status, xhr){
+					console.log(result);
+				},
+			})
+		}
+
+		function getTrafficLatest(){
+			$.ajax({
+				url			: "get-traffic/latest",
+				type		: "GET",
+				datatype 	: "json",
+				success 	: function(result, status, xhr){
+					var cur_sp 	= result.results.avgspeed.toFixed(2);
+					$("#trafficDisp").text(cur_sp);
+				},
+				error 		: function(result, status, xhr){
+					console.log(result);
+				},
+			})
+		}
+
 		function refreshLatest(){
-			console.log(current_area);
+			getSurgePriceLatest();
+			getTrafficLatest();
 		}
 
 		function refreshTimeRange(){

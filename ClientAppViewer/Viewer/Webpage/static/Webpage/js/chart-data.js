@@ -1,7 +1,7 @@
 var randomScalingFactor = function(){ return Math.round(Math.random()*1000)};
 	
 var demandAndSupplyData = {
-	labels : ["12-10-16 10:23:13","February","March","April","May","June","July"],
+	labels : [],
 	datasets : [
 		{
 			label: "Demand",
@@ -11,7 +11,7 @@ var demandAndSupplyData = {
 			pointStrokeColor : "#fff",
 			pointHighlightFill : "#fff",
 			pointHighlightStroke : "rgba(220,220,220,1)",
-			data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			data : []
 		},
 		{
 			label: "Supply",
@@ -21,14 +21,14 @@ var demandAndSupplyData = {
 			pointStrokeColor : "#fff",
 			pointHighlightFill : "#fff",
 			pointHighlightStroke : "rgba(48, 164, 255, 1)",
-			data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			data : []
 		}
 	]
 
 }
 	
-var barChartData = {
-	labels : ["January","February","March","April","May","June","July"],
+var trafficData = {
+	labels : [],
 	datasets : [
 		{
 			label: "Supply",
@@ -38,7 +38,7 @@ var barChartData = {
 			pointStrokeColor : "#fff",
 			pointHighlightFill : "#fff",
 			pointHighlightStroke : "rgba(48, 164, 255, 1)",
-			data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			data : []
 		},
 	]
 

@@ -64,7 +64,7 @@
 							<div id="map" style="height:350px;"></div>
 						</div>
 					</div>
-				</div>
+				</div>	
 			</div>
 
 			<div class="col-md-6">
@@ -72,10 +72,37 @@
 					<div class="panel-heading">
 						Vehicles
 						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span>
-						<span class="pull-right panel-toggle panel-button-tab-left" onclick="refreshTimeRange()"><em class="fa fa-refresh"></em></span>
+						<span class="pull-right panel-toggle panel-button-tab-left" onclick="getDemandSupplyRange()"><em class="fa fa-refresh"></em></span>
 					</div>
 					<div class="panel-body">
-						<div>
+						<div id="demandSupplyRange">
+							Start &nbsp: 	<input type="text" name="start-date" placeholder="YYYY-MM-DD" size="15"> 
+											<input type="text" name="start-time" placeholder="HH:MM:ss" size="15">
+											<br><br>
+							End &nbsp&nbsp: <input type="text" name="end-date" placeholder="YYYY-MM-DD" size="15"> 
+											<input type="text" name="end-time" placeholder="HH:MM:ss" size="15">
+											<br><br>
+						</div>
+
+						<div class="canvas-wrapper">
+							<canvas class="main-chart" id="demandsupply-chart" height="400px" width="500px"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Avg speed (Miles/h)
+						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span>
+						<span class="pull-right panel-toggle panel-button-tab-left" onclick="getTrafficRange()"><em class="fa fa-refresh"></em></span>
+					</div>
+
+					<div class="panel-body">
+						<div id="trafficRange">
 							<form>
 								Start &nbsp: 	<input type="text" name="start-time" placeholder="YYYY-MM-DD" size="15"> 
 												<input type="text" name="start-time" placeholder="HH:MM:ss" size="15">
@@ -87,36 +114,7 @@
 						</div>
 
 						<div class="canvas-wrapper">
-							<canvas class="main-chart" id="line-chart" height="400px" width="500px"></canvas>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div><!--/.row-->
-		
-		<div class="row">
-			<div class="col-md-6">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						Avg speed
-						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span>
-						<span class="pull-right panel-toggle panel-button-tab-left" onclick="refreshTimeRange()"><em class="fa fa-refresh"></em></span>
-					</div>
-
-					<div class="panel-body">
-						<div>
-							<form>
-								Start &nbsp: 	<input type="text" name="start-time" placeholder="YYY-MM-DD" size="15"> 
-												<input type="text" name="start-time" placeholder="HH:MM:ss" size="15">
-												<br><br>
-								End &nbsp&nbsp: <input type="text" name="end-time" placeholder="YYY-MM-DD" size="15"> 
-												<input type="text" name="end-time" placeholder="HH:MM:ss" size="15">
-												<br><br>
-							</form>
-						</div>
-
-						<div class="canvas-wrapper">
-							<canvas class="main-chart" id="bar-chart" height="350px" width="500px"></canvas>
+							<canvas class="main-chart" id="traffic-chart" height="350px" width="500px"></canvas>
 						</div>
 					</div>
 				</div>
@@ -219,32 +217,80 @@
 			getTrafficLatest();
 		}
 
-		function refreshTimeRange(){
+		function getDemandSupplyRange(){
+			var inputs 		= $("#demandSupplyRange").find("input");
+			var startDate 	= $.grep(inputs, function(e){return e.name == "start-date";})[0];
+			var startTime 	= $.grep(inputs, function(e){return e.name == "start-time";})[0];
+			var endDate 	= $.grep(inputs, function(e){return e.name == "end-date";})[0];
+			var endTime 	= $.grep(inputs, function(e){return e.name == "end-time";})[0];
+			var startQuery 	= startDate.value + "T" + startTime.value + "Z";
+			var endQuery 	= endDate.value + "T" + endTime.value + "Z";
 
+			$.ajax({
+				url			: "get-demandsupply/range",
+				type		: "GET",
+				data 		: {	start 	: startQuery,
+								end 	: endQuery,
+								},
+				datatype 	: "json",
+				success 	: function(result, status, xhr){
+					var resp 	= result.results;
+					demandAndSupplyData['datasets'][0]['data'] 	= resp.demand;
+					demandAndSupplyData['datasets'][1]['data'] 	= resp.supply;
+					demandAndSupplyData['labels'] 				= resp.timestamp;
+					console.log(demandAndSupplyData);
+					display("demandsupply-chart", demandAndSupplyData)
+				},
+				error 		: function(result, status, xhr){
+					console.log(result);
+				},
+			})
+		}
+
+		function getTrafficRange(){
+			var inputs 		= $("#demandSupplyRange").find("input");
+			var startDate 	= $.grep(inputs, function(e){return e.name == "start-date";})[0];
+			var startTime 	= $.grep(inputs, function(e){return e.name == "start-time";})[0];
+			var endDate 	= $.grep(inputs, function(e){return e.name == "end-date";})[0];
+			var endTime 	= $.grep(inputs, function(e){return e.name == "end-time";})[0];
+			var startQuery 	= startDate.value + "T" + startTime.value + "Z";
+			var endQuery 	= endDate.value + "T" + endTime.value + "Z";
+
+			$.ajax({
+				url			: "get-traffic/range",
+				type		: "GET",
+				data 		: {	start 	: startQuery,
+								end 	: endQuery,
+								},
+				datatype 	: "json",
+				success 	: function(result, status, xhr){
+					var resp 	= result.results;
+					trafficData['datasets'][0]['data'] 	= resp.avgspeed;
+					trafficData['labels'] 				= resp.timestamp;
+					console.log(trafficData);
+					display("traffic-chart", trafficData)
+				},
+				error 		: function(result, status, xhr){
+					console.log(result);
+				},
+			})
 		}
 
 		function refreshWeather(){
 
 		}
 
-		window.onload = function () {
-			var chart1 = document.getElementById("line-chart").getContext("2d");
-			// console.log(demandAndSupplyData['labels'].push('asdasd'));
-			window.myLine = new Chart(chart1).Line(demandAndSupplyData, {
+		function display(chartId, chartDataObj){
+			var chart = document.getElementById(chartId).getContext("2d");
+			window.myLine = new Chart(chart).Line(chartDataObj, {
 				responsive: true,
 				scaleLineColor: "rgba(0,0,0,.2)",
 				scaleGridLineColor: "rgba(0,0,0,.05)",
 				scaleFontColor: "#c5c7cc"
 			});
-			
-			var chart2 = document.getElementById("bar-chart").getContext("2d");
-			window.myBar = new Chart(chart2).Line(barChartData, {
-				responsive: true,
-				scaleLineColor: "rgba(0,0,0,.2)",
-				scaleGridLineColor: "rgba(0,0,0,.05)",
-				scaleFontColor: "#c5c7cc"
-			});
+		}
 
+		window.onload = function () {
 			// Plot the map using Google API
 			myMap();
 		};

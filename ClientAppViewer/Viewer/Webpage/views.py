@@ -35,30 +35,36 @@ class TrafficStatus(View):
 
 class DemandSupplyDistribution(View):
 	def get(self, request, *args, **kwargs):
-		start 		= parser.parse(request.GET['start'])
-		end 		= parser.parse(request.GET['end'])
-		data_dao 	= RealtimeDataDAOFactory.getDAO("surgeprice")
-		model_obj 	= data_dao.getTimestampRange(start, end)
 		resp_dict 	= { 'demand' 	: [],
 						'supply' 	: [],
 						'timestamp' : [],}
+		try:
+			start 		= parser.parse(request.GET['start'])
+			end 		= parser.parse(request.GET['end'])
+			data_dao 	= RealtimeDataDAOFactory.getDAO("surgeprice")
+			model_obj 	= data_dao.getTimestampRange(start, end)
 
-		for each_model in model_obj:
-			resp_dict['demand'].append(each_model.demand)
-			resp_dict['supply'].append(each_model.supply)
-			resp_dict['timestamp'].append(each_model.timestamp)
+			for each_model in model_obj:
+				resp_dict['demand'].append(each_model.demand)
+				resp_dict['supply'].append(each_model.supply)
+				resp_dict['timestamp'].append(each_model.timestamp)
+		except Exception as ex:
+			pass 
 		return JsonResponse({"results" : resp_dict})
 
 class TrafficDistribution(View):
 	def get(self, request, *args, **kwargs):
-		start 		= parser.parse(request.GET['start'])
-		end 		= parser.parse(request.GET['end'])
-		data_dao 	= RealtimeDataDAOFactory.getDAO("traffic")
-		model_obj 	= data_dao.getTimestampRange(start, end)
 		resp_dict 	= { 'avgspeed' 	: [],
 						'timestamp' : [],}
+		try:
+			start 		= parser.parse(request.GET['start'])
+			end 		= parser.parse(request.GET['end'])
+			data_dao 	= RealtimeDataDAOFactory.getDAO("traffic")
+			model_obj 	= data_dao.getTimestampRange(start, end)
 
-		for each_model in model_obj:
-			resp_dict['avgspeed'].append(each_model.avgspeed)
-			resp_dict['timestamp'].append(each_model.timestamp)
+			for each_model in model_obj:
+				resp_dict['avgspeed'].append(each_model.avgspeed)
+				resp_dict['timestamp'].append(each_model.timestamp)
+		except Exception as ex:
+			pass
 		return JsonResponse({"results" : resp_dict})

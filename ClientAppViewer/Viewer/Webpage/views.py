@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView, View
 from Webpage.RealtimeDataDAO import RealtimeDataDAOFactory
-from Webpage.SurgePriceCalculatorMixin import *
+from Webpage.SurgePriceCalculatorMixin import *	
 from dateutil import parser
 
 class MainPage(TemplateView):

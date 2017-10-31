@@ -15,7 +15,7 @@ We will use the following datasets:
 Our approach uses mainly AWS services to simulate, stream and process data into databases. We will be using the following AWS services:
 * S3 storage 				- Used to store .csv scripts for generating customer demand
 * Kinesis streaming 		- Used to queue incoming data 
-* Ec2 instances (3 total)	- Amazon Linux environments used to perpetually generate to and consume from kinesis pipeline
+* Ec2 instances (4 total)	- Amazon Linux environments used to perpetually generate to and consume from kinesis pipeline
 * PostgreSQL RDS 			- SQL database to store processed results after consuming from the stream
 * Elasticsearch 			- NoSQL database used for mapping Geopoint coordinates ([long, lat]) to nearest Geohash location ID
 

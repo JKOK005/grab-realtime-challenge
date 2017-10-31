@@ -1,3 +1,4 @@
+import json
 from KinesisClient import KinesisClient
 from datetime import datetime, timedelta
 from dateutil.tz import tzoffset
@@ -15,14 +16,18 @@ class SupplyStreamConsumer(StreamConsumer):
 		ss_count 	= 0
 		response 	= self.consumeFirstInstance(stream_name, from_time_stamp)
 		result 		= response['Records']
+		all_taxi_id = set()
 
 		# Add supply processing logic here
 		while("NextShardIterator" in response and result):
-			ss_count 		+= len(result)
+			for each_result in result:
+				payload 	= json.loads(each_result['Data'])
+				taxi_id 	= payload['data']['taxiid']
+				all_taxi_id.add(taxi_id)
 			next_shard_itr 	= response['NextShardIterator']
 			response 		= self.client.get_records(ShardIterator=next_shard_itr)
 			result 			= response['Records']
-		return ss_count
+		return len(all_taxi_id)
 
 if __name__ == "__main__":
 	import os

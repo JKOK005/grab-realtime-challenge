@@ -2,3 +2,4 @@
 resources/
 **/[Cc]onfig*
 *.pyc
+/.recommenders/

@@ -9,7 +9,7 @@ conditions of the weather.
 ### Dataset
 We will use the following datasets:
 * [NYC Taxi and Limousine Commission](http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml) 	- Yellow taxi data for the the month of June, 2017
-* [Weather API data](https://www.wunderground.com/history/airport/KJFK/2014/1/2/DailyHistory.html?MR=1) - Historical weather data API 
+* [Weather Underground API](https://www.wunderground.com/history/airport/KJFK/2014/1/2/DailyHistory.html?MR=1) - Historical weather data API 
 
 ### Architecture
 Our approach uses mainly AWS services to simulate, stream and process data into databases. We will be using the following AWS services:
@@ -30,4 +30,3 @@ This repository contains several services listed below
 * SupplyEc2 		- Spins a supply node on an Ec2 instance to generate taxi supply to the Kinesis supply stream
 * StreamConsumer 	- Spins nodes on Ec2 instances to consume from all Kinesis streams and stores data into PostgreSQL tables
 * ClientAppViewer 	- Frontend and backend services for querying database and displaying data (realtime and batch)
-
